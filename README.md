@@ -1,5 +1,7 @@
 # AUR package tester
 
+[![Build Status](https://cloud.drone.io/api/badges/mxmehl/aur-package-tester/status.svg)](https://cloud.drone.io/mxmehl/aur-package-tester)
+
 This repo contains scripts and Drone CI configuration to automatically test the
 AUR packages I maintain.
 

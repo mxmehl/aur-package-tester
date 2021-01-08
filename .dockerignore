@@ -1,0 +1,5 @@
+## Ignore everything
+**
+
+## Allow just these files
+!/install_deps.py

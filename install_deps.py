@@ -14,6 +14,14 @@ with open(f"{package}/.SRCINFO", "r") as file:
     SRCINFO = file.read()
     parsed = parse_srcinfo(SRCINFO)
     deps = parsed[0]["depends"]
+    makedeps = parsed[0]["makedepends"]
+    checkdeps = parsed[0]["checkdepends"]
 
 for dep in deps:
+    install(dep)
+
+for dep in makedeps:
+    install(dep)
+
+for dep in checkdeps:
     install(dep)

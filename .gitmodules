@@ -1,0 +1,9 @@
+[submodule "python-boolean.py"]
+	path = python-boolean.py
+	url = https://aur.archlinux.org/python-boolean.py.git
+[submodule "python-license-expression"]
+	path = python-license-expression
+	url = https://aur.archlinux.org/python-license-expression.git
+[submodule "reuse"]
+	path = reuse
+	url = https://aur.archlinux.org/reuse.git

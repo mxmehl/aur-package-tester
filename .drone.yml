@@ -8,6 +8,13 @@ steps:
   commands:
   - git submodule update --init
 
+- name: build-permissions
+  image: alpine
+  environment:
+    PKGS: python-boolean.py python-license-expression reuse
+  commands:
+    - if [ "$DRONE" == "true" ]; then chmod 777 $PKGS; fi
+
 - name: python-boolean.py
   image: mxmehl/aur-package-tester:latest
   environment:

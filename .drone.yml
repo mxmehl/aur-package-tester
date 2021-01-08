@@ -1,0 +1,39 @@
+---
+kind: pipeline
+name: default
+
+steps:
+- name: submodules
+  image: alpine/git
+  commands:
+  - git submodule update --init
+
+- name: python-boolean.py
+  image: mxmehl/aur-package-tester:latest
+  environment:
+    PKG: python-boolean.py
+  commands:
+  - namcap $PKG/PKGBUILD
+  - python3 /home/builder/install_deps.py $PKG
+  - cd $PKG
+  - makepkg -sci --noconfirm
+
+- name: python-license-expression
+  image: mxmehl/aur-package-tester:latest
+  environment:
+    PKG: python-license-expression
+  commands:
+  - namcap $PKG/PKGBUILD
+  - python3 /home/builder/install_deps.py $PKG
+  - cd $PKG
+  - makepkg -sci --noconfirm
+
+- name: reuse
+  image: mxmehl/aur-package-tester:latest
+  environment:
+    PKG: reuse
+  commands:
+  - namcap $PKG/PKGBUILD
+  - python3 /home/builder/install_deps.py $PKG
+  - cd $PKG
+  - makepkg -sci --noconfirm

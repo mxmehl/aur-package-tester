@@ -55,6 +55,8 @@ steps:
   - python3 /home/builder/install_deps.py $PKG
   - cd $PKG
   - makepkg -sci --noconfirm
+  - git clone https://github.com/fsfe/reuse-tool.git /tmp/reuse-tool
+  - reuse --root /tmp/reuse-tool lint
   depends_on:
   - submodules
   - build-permissions

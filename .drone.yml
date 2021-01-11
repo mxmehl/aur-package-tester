@@ -14,33 +14,47 @@ steps:
     PKGS: python-boolean.py python-license-expression reuse
   commands:
     - if [ "$DRONE" == "true" ]; then chmod 777 $PKGS; fi
+  depends_on:
+  - submodules
 
 - name: python-boolean.py
   image: mxmehl/aur-package-tester:latest
   environment:
     PKG: python-boolean.py
   commands:
+  - sudo pacman -Syu --noconfirm
   - namcap $PKG/PKGBUILD
   - python3 /home/builder/install_deps.py $PKG
   - cd $PKG
   - makepkg -sci --noconfirm
+  depends_on:
+  - submodules
+  - build-permissions
 
 - name: python-license-expression
   image: mxmehl/aur-package-tester:latest
   environment:
     PKG: python-license-expression
   commands:
+  - sudo pacman -Syu --noconfirm
   - namcap $PKG/PKGBUILD
   - python3 /home/builder/install_deps.py $PKG
   - cd $PKG
   - makepkg -sci --noconfirm
+  depends_on:
+  - submodules
+  - build-permissions
 
 - name: reuse
   image: mxmehl/aur-package-tester:latest
   environment:
     PKG: reuse
   commands:
+  - sudo pacman -Syu --noconfirm
   - namcap $PKG/PKGBUILD
   - python3 /home/builder/install_deps.py $PKG
   - cd $PKG
   - makepkg -sci --noconfirm
+  depends_on:
+  - submodules
+  - build-permissions

@@ -17,17 +17,20 @@ steps:
   depends_on:
   - submodules
 
-- name: pull-docker
-  image: mxmehl/aur-package-tester:latest
+- name: build-docker
+  image: docker
   commands:
-    - md5sum /home/builder/install_deps.py
+    - docker build -t aur-package-tester:latest .
+  volumes:
+  - name: dockersock
+    path: /var/run/docker.sock
 
 - name: python-boolean.py
-  image: mxmehl/aur-package-tester:latest
+  image: aur-package-tester:latest
+  pull: if-not-exists
   environment:
     PKG: python-boolean.py
   commands:
-  - sudo pacman -Syu --noconfirm
   - namcap $PKG/PKGBUILD
   - python3 /home/builder/install_deps.py $PKG
   - cd $PKG
@@ -35,14 +38,14 @@ steps:
   depends_on:
   - submodules
   - build-permissions
-  - pull-docker
+  - build-docker
 
 - name: python-license-expression
-  image: mxmehl/aur-package-tester:latest
+  image: aur-package-tester:latest
+  pull: if-not-exists
   environment:
     PKG: python-license-expression
   commands:
-  - sudo pacman -Syu --noconfirm
   - namcap $PKG/PKGBUILD
   - python3 /home/builder/install_deps.py $PKG
   - cd $PKG
@@ -50,14 +53,14 @@ steps:
   depends_on:
   - submodules
   - build-permissions
-  - pull-docker
+  - build-docker
 
 - name: reuse
-  image: mxmehl/aur-package-tester:latest
+  image: aur-package-tester:latest
+  pull: if-not-exists
   environment:
     PKG: reuse
   commands:
-  - sudo pacman -Syu --noconfirm
   - namcap $PKG/PKGBUILD
   - python3 /home/builder/install_deps.py $PKG
   - cd $PKG
@@ -67,4 +70,9 @@ steps:
   depends_on:
   - submodules
   - build-permissions
-  - pull-docker
+  - build-docker
+
+volumes:
+- name: dockersock
+  host:
+    path: /var/run/docker.sock

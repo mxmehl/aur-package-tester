@@ -6,43 +6,32 @@ from srcinfo.parse import parse_srcinfo
 
 package = sys.argv[1]
 
-def install(dependency):
+def install_package(app):
     """Install a given package with yay"""
-    subprocess.call(["yay", "--useask", "--noconfirm", "--needed", "-S", dependency])
+    subprocess.call(["yay", "--useask", "--noconfirm", "--needed", "-S", app])
 
-# Open file
+def install_dependencies(srcinfo, deptype):
+    """Parse dependency type (e.g. makedepends) and install if applicable"""
+
+    try:
+        deps = srcinfo[0][deptype]
+    except KeyError:
+        deps = None
+        print(f"[INFO] No {deptype} required by package")
+    else:
+        print(f"[INFO] Installing {deps} as {deptype}")
+        for dep in deps:
+            install_package(dep)
+
+# Open .SRCINFO and parse it
 with open(f"{package}/.SRCINFO", "r") as file:
     parsed = parse_srcinfo(file.read())
 
-# Normal dependencies
-try:
-    deps = parsed[0]["depends"]
-except KeyError:
-    deps = None
-    print("[INFO] no depends")
+# Install runtime dependencies
+install_dependencies(parsed, "depends")
 
-if deps:
-    for dep in deps:
-        install(dep)
+# Install make dependencies
+install_dependencies(parsed, "makedepends")
 
-# Make dependencies
-try:
-    makedeps = parsed[0]["makedepends"]
-except KeyError:
-    makedeps = None
-    print("[INFO] no makedepends")
-
-if makedeps:
-    for dep in makedeps:
-        install(dep)
-
-# Check dependencies
-try:
-    checkdeps = parsed[0]["checkdepends"]
-except KeyError:
-    checkdeps = None
-    print("[INFO] no checkdepends")
-
-if checkdeps:
-    for dep in checkdeps:
-        install(dep)
+# Install check dependencies
+install_dependencies(parsed, "checkdepends")

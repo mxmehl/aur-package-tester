@@ -20,7 +20,7 @@ steps:
 - name: build-docker
   image: docker
   commands:
-    - docker build -t aur-package-tester:latest .
+    - docker build --no-cache -t aur-package-tester:latest .
   volumes:
   - name: dockersock
     path: /var/run/docker.sock
